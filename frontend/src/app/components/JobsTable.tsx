@@ -17,17 +17,28 @@ export default function JobsTable({
   const [loading, setLoading] = useState(true);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const BASE_URL = "http://localhost:3001";
 
   // Fetch jobs
   useEffect(() => {
     const fetchJobs = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
       try {
-        const response = await fetch("/api/jobs");
+        const response = await fetch(`${BASE_URL}/api/jobs`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         const result = await response.json();
 
         if (Array.isArray(result?.data)) {
           setJobs(result.data);
           setFilteredJobs(result.data);
+          onJobsLoaded(result.data.length > 0);
         } else {
           setJobs([]);
           setFilteredJobs([]);
@@ -41,19 +52,18 @@ export default function JobsTable({
         setLoading(false);
       }
     };
+
     fetchJobs();
-  }, [onRefresh, onJobsLoaded]);
+  }, [onRefresh]);
 
   // Apply filters and sorting
   useEffect(() => {
     let filtered = [...jobs];
 
-    // Status filtering
     if (statusFilter !== "All") {
       filtered = filtered.filter((job) => job.status === statusFilter);
     }
 
-    // Sorting
     filtered = filtered.sort((a, b) => {
       const dateA = new Date(a.dateOfApplication).getTime();
       const dateB = new Date(b.dateOfApplication).getTime();
@@ -63,24 +73,24 @@ export default function JobsTable({
     setFilteredJobs(filtered);
   }, [jobs, statusFilter, sortOrder]);
 
-  // Reset filters
   const resetFilters = () => {
     setStatusFilter("All");
     setSortOrder("newest");
   };
 
-  // Update job function
   const updateJob = async (jobData: Partial<Job>) => {
+    const token = localStorage.getItem("token");
     if (!jobData._id) {
       setError("Invalid job ID");
       return;
     }
 
     try {
-      const response = await fetch(`/api/jobs/${jobData._id}`, {
+      const response = await fetch(`${BASE_URL}/api/jobs/${jobData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(jobData),
       });
@@ -97,13 +107,16 @@ export default function JobsTable({
     }
   };
 
-  // Delete job function
   const deleteJob = async (jobId: string) => {
+    const token = localStorage.getItem("token");
     if (!confirm("Are you sure?")) return;
 
     try {
-      const response = await fetch(`/api/jobs/${jobId}`, {
+      const response = await fetch(`${BASE_URL}/api/jobs/${jobId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) throw new Error("Delete failed");
@@ -133,7 +146,6 @@ export default function JobsTable({
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      {/* Filter Controls */}
       <div className="p-4 border-b border-gray-200 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-gray-700">Status:</label>

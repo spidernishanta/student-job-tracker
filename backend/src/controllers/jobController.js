@@ -18,7 +18,8 @@ const createJob = async (req, res) => {
       role: role.trim(),
       status: status.trim(),
       dateOfApplication: dateOfApplication.trim(),
-      link: link.trim()
+      link: link.trim(),
+      user: req.user.id,  // Associating the job with the logged-in user
     });
 
     res.status(201).json(job);
@@ -40,8 +41,7 @@ const createJob = async (req, res) => {
 // all jobs
 const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({}).lean();
-
+    const jobs = await Job.find({ user: req.user.id }).lean(); // Only jobs for the logged-in user
     return res.status(200).json({
       count: jobs.length,
       data: jobs,
@@ -62,7 +62,7 @@ const getJob = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "invalid job id" });
     }
-    const job = await Job.findById(id);
+    const job = await Job.findById(id).where('user').equals(req.user.id); // Only jobs created by the logged-in user
     if (!job) return res.status(404).json({ error: "job not found" });
     res.json(job);
   } catch (error) {
@@ -79,7 +79,7 @@ const updateJob = async (req, res) => {
     }
     const updatedJob = await Job.findByIdAndUpdate(id, req.body, {
       new: true,
-    });
+    }).where('user').equals(req.user.id);  // Ensure job belongs to the logged-in user
     if (!updatedJob) return res.status(404).json({ error: "job not found" });
     res.json(updatedJob);
   } catch (error) {
@@ -94,7 +94,7 @@ const deleteJob = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: "invalid job id" });
     }
-    const deletedJob = await Job.findByIdAndDelete(id);
+    const deletedJob = await Job.findByIdAndDelete(id).where('user').equals(req.user.id); // Only delete jobs created by the user
     if (!deletedJob) return res.status(404).json({ error: "job not found" });
     res.json({ message: "job deleted successfully" });
   } catch (error) {

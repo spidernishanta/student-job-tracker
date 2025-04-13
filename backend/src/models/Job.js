@@ -26,12 +26,13 @@ const jobSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-const Job = mongoose.model("Job", jobSchema);
-
-module.exports = Job;
+module.exports = mongoose.model("Job", jobSchema);
