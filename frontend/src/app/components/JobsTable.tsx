@@ -17,7 +17,7 @@ export default function JobsTable({
   const [loading, setLoading] = useState(true);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const BASE_URL = "http://localhost:3001";
+  const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
 
   // Fetch jobs
   useEffect(() => {

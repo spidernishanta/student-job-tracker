@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:3001/api/:path*',
+        destination: 'https://student-job-tracker-backend-9dmx.onrender.com/api/:path*',
       },
     ];
   },

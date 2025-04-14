@@ -6,7 +6,7 @@ import JobModal from "../components/JobModal";
 import JobsTable from "../components/JobsTable";
 import { Job } from "../types/job";
 
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -1,6 +1,6 @@
 import { Job, JobCreateDTO, JobUpdateDTO } from "../app/types/job";
 
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
 
 const handleResponse = async (response: Response) => {
   const text = await response.text();
@@ -24,7 +24,7 @@ export const jobApi = {
   //create job api
   createJob: async (jobData: JobCreateDTO): Promise<Job> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/jobs/create`, {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const jobApi = {
 
   getAllJobs: async (): Promise<Job[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/jobs`);
+      const response = await fetch(`${API_BASE_URL}/api/jobs`);
       return await handleResponse(response);
     } catch (error) {
       console.error("get jobs error:", error);
@@ -60,7 +60,7 @@ export const jobApi = {
     jobData: JobUpdateDTO
   ): Promise<Job> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export const jobApi = {
   // delete job api
   deleteJob: async (jobId: string): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/${jobId}`, {
         method: "DELETE",
       });
       await handleResponse(response);
