@@ -5,6 +5,7 @@ import AuthModal from "../components/AuthModal";
 import JobModal from "../components/JobModal";
 import JobsTable from "../components/JobsTable";
 import { Job } from "../types/job";
+import { useRouter } from "next/navigation";
 
 const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
 
@@ -17,6 +18,7 @@ export default function HomePage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [userName, setUserName] = useState<string | null>(null);
   const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const router=useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -40,9 +42,11 @@ export default function HomePage() {
         setUserName(data.name);
       } else {
         console.error("Failed to fetch user info");
+        handleLogout();
       }
     } catch (err) {
       console.error("Error fetching user info:", err);
+      handleLogout();
     } finally {
       setIsFetchingUser(false);
     }
@@ -109,6 +113,7 @@ export default function HomePage() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserName(null);
+    router.push("/");
   };
 
   const handleAddJob = async (jobData: Partial<Job>) => {

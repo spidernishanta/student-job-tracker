@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Job } from "../types/job";
 import JobModal from "./JobModal";
+import { useRouter } from "next/navigation";
 
 export default function JobsTable({
   onRefresh,
@@ -18,6 +19,13 @@ export default function JobsTable({
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
   const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/");
+    window.location.reload();
+  };
 
   // Fetch jobs
   useEffect(() => {
@@ -43,6 +51,7 @@ export default function JobsTable({
           setJobs([]);
           setFilteredJobs([]);
           console.error("Invalid response format:", result);
+          handleLogout();
         }
       } catch (error) {
         console.error("Fetch error:", error);
@@ -156,12 +165,12 @@ export default function JobsTable({
           >
             <option value="All">All</option>
             <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Offer">Offer</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Ghosted">Ghosted</option>
-              <option value="Withdrawn">Withdrawn</option>
-              <option value="On Hold">On Hold</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Ghosted">Ghosted</option>
+            <option value="Withdrawn">Withdrawn</option>
+            <option value="On Hold">On Hold</option>
           </select>
         </div>
 
@@ -170,7 +179,9 @@ export default function JobsTable({
           <select
             className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as "newest" | "oldest")}
+            onChange={(e) =>
+              setSortOrder(e.target.value as "newest" | "oldest")
+            }
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
