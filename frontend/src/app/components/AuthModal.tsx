@@ -5,7 +5,11 @@ interface AuthModalProps {
   mode: "login" | "signup";
   onClose: () => void;
   onLogin: (credentials: { email: string; password: string }) => void;
-  onSignup: (userData: { name: string; email: string; password: string }) => void;
+  onSignup: (userData: {
+    name: string;
+    email: string;
+    password: string;
+  }) => void;
   error: string | null;
 }
 
@@ -53,7 +57,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             <input
               type="text"
               placeholder="Name"
-              className="w-full border p-2 mb-3 rounded-md"
+              className="w-full border p-2 mb-3 rounded-md text-gray-900 placeholder-gray-500"
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoComplete="name"
@@ -63,7 +67,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <input
             type="email"
             placeholder="Email"
-            className="w-full border p-2 mb-3 rounded-md"
+            className="w-full border p-2 mb-3 rounded-md text-gray-900 placeholder-gray-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
@@ -71,10 +75,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <input
             type="password"
             placeholder="Password"
-            className="w-full border p-2 mb-4 rounded-md"
+            className="w-full border p-2 mb-4 rounded-md text-gray-900 placeholder-gray-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            autoComplete={
+              mode === "login" ? "current-password" : "new-password"
+            }
           />
 
           {error && (

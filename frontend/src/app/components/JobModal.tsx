@@ -20,7 +20,7 @@ export default function JobModal({
     role: "",
     status: "Applied",
     dateOfApplication: new Date(),
-    link: "",
+    link: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export default function JobModal({
         role: "",
         status: "Applied",
         dateOfApplication: new Date(),
-        link: "",
+        link: ""
       });
     }
   }, [initialData]);
@@ -72,15 +72,15 @@ export default function JobModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300 ease-in-out">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-semibold text-gray-900">
             {initialData ? "Edit Job" : "Add New Job"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+            className="text-gray-400 hover:text-red-500 text-xl font-bold"
             disabled={isSubmitting}
           >
             ×
@@ -88,14 +88,15 @@ export default function JobModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Company */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               Company *
             </label>
             <input
               type="text"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={formData.company || ""}
               onChange={(e) =>
                 setFormData({ ...formData, company: e.target.value })
@@ -104,14 +105,15 @@ export default function JobModal({
             />
           </div>
 
+          {/* Role */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               Role *
             </label>
             <input
               type="text"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={formData.role || ""}
               onChange={(e) =>
                 setFormData({ ...formData, role: e.target.value })
@@ -120,12 +122,14 @@ export default function JobModal({
             />
           </div>
 
+          {/* Status */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               Status *
             </label>
             <select
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={formData.status || "Applied"}
               onChange={(e) =>
                 setFormData({
@@ -145,14 +149,15 @@ export default function JobModal({
             </select>
           </div>
 
+          {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               Date of Application *
             </label>
             <input
               type="date"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={
                 formData.dateOfApplication
                   ? new Date(formData.dateOfApplication)
@@ -170,36 +175,35 @@ export default function JobModal({
             />
           </div>
 
+          {/* Link */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               Job Link
             </label>
             <input
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              type="url"
+              className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={formData.link || ""}
               onChange={(e) =>
                 setFormData({ ...formData, link: e.target.value })
               }
               disabled={isSubmitting}
-              placeholder="https://example.com/job-listing"
+              placeholder="https://example.com/job"
             />
           </div>
 
-          {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
-
-          <div className="flex justify-end space-x-2 mt-6">
+          <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-50"
+              className="px-4 py-2 text-gray-800 bg-gray-100 rounded-md hover:bg-gray-200 transition-all"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+              className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-all"
               disabled={isSubmitting}
             >
               {isSubmitting

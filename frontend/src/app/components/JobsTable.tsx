@@ -155,11 +155,12 @@ export default function JobsTable({
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Filters */}
       <div className="p-4 border-b border-gray-200 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-gray-700">Status:</label>
           <select
-            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="rounded-md border-gray-400 text-gray-800 px-2 py-1 focus:border-indigo-500 focus:ring-indigo-500"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -177,7 +178,7 @@ export default function JobsTable({
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-gray-700">Sort by:</label>
           <select
-            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="rounded-md border-gray-400 text-gray-800 px-2 py-1 focus:border-indigo-500 focus:ring-indigo-500"
             value={sortOrder}
             onChange={(e) =>
               setSortOrder(e.target.value as "newest" | "oldest")
@@ -196,65 +197,71 @@ export default function JobsTable({
         </button>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Company
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Role
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Date of Application
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {filteredJobs.length > 0 ? (
-            filteredJobs.map((job) => (
-              <tr key={job._id}>
-                <td className="px-6 py-4 whitespace-nowrap">{job.company}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.role}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {new Date(job.dateOfApplication).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                  <button
-                    onClick={() => setEditingJob(job)}
-                    className="px-4 py-2 text-gray-700 bg-blue-100 rounded-md hover:bg-blue-200"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteJob(job._id)}
-                    className="px-4 py-2 text-red-700 bg-gray-100 rounded-md hover:bg-red-200"
-                  >
-                    Delete
-                  </button>
+      {/* Scrollable Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase">
+                Company
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase">
+                Date of Application
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 text-gray-900">
+            {filteredJobs.length > 0 ? (
+              filteredJobs.map((job) => (
+                <tr key={job._id}>
+                  <td className="px-6 py-4 whitespace-nowrap">{job.company}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{job.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{job.status}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {new Date(job.dateOfApplication).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <button
+                      onClick={() => setEditingJob(job)}
+                      className="px-4 py-2 text-gray-700 bg-blue-100 rounded-md hover:bg-blue-200"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteJob(job._id)}
+                      className="px-4 py-2 text-red-700 bg-gray-100 rounded-md hover:bg-red-200"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="text-center py-4 text-gray-500">
+                  No jobs found matching the criteria
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} className="text-center py-4 text-gray-500">
-                No jobs found matching the criteria
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {editingJob && (
         <JobModal
