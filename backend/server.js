@@ -11,17 +11,11 @@ const protect = require("./src/middleware/authMiddleware");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Check for required environment variables
-if (!process.env.MONGO_URI || !process.env.JWT_SECRET) {
-  console.error("Missing required environment variables");
-  process.exit(1);  // Exit process if a required variable is missing
-}
-
 // security middleware
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3000", // frontend origin
+    origin: "https://nextsteptracker.vercel.app", // frontend origin
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -32,20 +26,6 @@ app.use(express.json());
 // routes
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api", protect, jobRoutes); // Protect the job routes
-
-// Health check route (optional)
-app.get("/health", (req, res) => {
-  res.status(200).json({ message: "Server is running!" });
-});
-
-// Error handling middleware (catch-all for unhandled errors)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    message: "Internal Server Error",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined,
-  });
-});
 
 // connect to DB
 connectDB();
