@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(
   cors({
-    origin: "https://nextsteptracker.vercel.app", // frontend origin
+    origin: ["http://localhost:3000", "https://nextsteptracker.vercel.app"], // frontend origin
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
