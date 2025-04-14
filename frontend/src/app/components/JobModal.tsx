@@ -20,7 +20,7 @@ export default function JobModal({
     role: "",
     status: "Applied",
     dateOfApplication: new Date(),
-    link: ""
+    link: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export default function JobModal({
         role: "",
         status: "Applied",
         dateOfApplication: new Date(),
-        link: ""
+        link: "",
       });
     }
   }, [initialData]);
@@ -191,6 +191,11 @@ export default function JobModal({
               placeholder="https://example.com/job"
             />
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="text-red-600 text-sm font-medium">{error}</div>
+          )}
 
           <div className="flex justify-end gap-3 mt-6">
             <button
