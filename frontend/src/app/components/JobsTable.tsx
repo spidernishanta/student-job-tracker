@@ -18,6 +18,15 @@ export default function JobsTable({
   const [loading, setLoading] = useState(true);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const getStatusCounts = () => {
+    const counts: { [status: string]: number } = {};
+    jobs.forEach((job) => {
+      counts[job.status] = (counts[job.status] || 0) + 1;
+    });
+    return counts;
+  };
+
   const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
   const router = useRouter();
 
@@ -152,9 +161,27 @@ export default function JobsTable({
     );
 
   if (error) return <div className="text-red-600">{error}</div>;
+  const statusCounts = getStatusCounts();
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Status Frequency Counter */}
+      <div className="p-4 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          Status Summary
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          {Object.entries(statusCounts).map(([status, count]) => (
+            <div
+              key={status}
+              className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-medium"
+            >
+              {status}: {count}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Filters */}
       <div className="p-4 border-b border-gray-200 flex flex-wrap gap-4 items-center">
         <div className="flex items-center gap-2">
