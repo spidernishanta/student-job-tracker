@@ -139,6 +139,9 @@ export default function JobModal({
               <option value="Interview">Interview</option>
               <option value="Offer">Offer</option>
               <option value="Rejected">Rejected</option>
+              <option value="Ghosted">Ghosted</option>
+              <option value="Withdrawn">Withdrawn</option>
+              <option value="On Hold">On Hold</option>
             </select>
           </div>
 
@@ -172,7 +175,7 @@ export default function JobModal({
               Job Link
             </label>
             <input
-              type="url"
+              type="text"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               value={formData.link || ""}
               onChange={(e) =>

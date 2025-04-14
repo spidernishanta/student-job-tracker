@@ -6,7 +6,7 @@ const createJob = async (req, res) => {
   try {
     const { company, role, status, dateOfApplication, link } = req.body;
 
-    if (!company || !role || !status || !dateOfApplication || !link) {
+    if (!company || !role || !status || !dateOfApplication) {
       return res.status(400).json({
         message: "Validation Error",
         details: "All fields are required",

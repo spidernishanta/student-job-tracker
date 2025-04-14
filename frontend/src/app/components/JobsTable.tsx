@@ -156,9 +156,12 @@ export default function JobsTable({
           >
             <option value="All">All</option>
             <option value="Applied">Applied</option>
-            <option value="Interview">Interview</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Ghosted">Ghosted</option>
+              <option value="Withdrawn">Withdrawn</option>
+              <option value="On Hold">On Hold</option>
           </select>
         </div>
 
