@@ -181,7 +181,7 @@ export default function JobModal({
               Job Link
             </label>
             <input
-              type="url"
+              type="text"
               className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 px-3 py-2 text-gray-900"
               value={formData.link || ""}
               onChange={(e) =>
