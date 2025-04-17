@@ -245,8 +245,8 @@ export default function JobsTable({
           <label className="text-sm font-medium text-gray-700">Search:</label>
           <input
             type="text"
-            placeholder="Search by company or role"
-            className="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            placeholder="Search by Company or Role"
+            className="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 text-gray-900"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -330,7 +330,7 @@ export default function JobsTable({
       {totalPages > 1 && (
         <div className="p-4 flex justify-center items-center gap-2 bg-gray-50">
           <button
-            className="px-3 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200"
+            className="px-3 py-1 text-sm bg-gray-700 rounded hover:bg-gray-900"
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -342,7 +342,7 @@ export default function JobsTable({
               className={`px-3 py-1 text-sm rounded ${
                 currentPage === i + 1
                   ? "bg-indigo-500 text-white"
-                  : "bg-gray-100 hover:bg-gray-200"
+                  : "bg-gray-700 hover:bg-gray-900"
               }`}
               onClick={() => goToPage(i + 1)}
             >
@@ -350,7 +350,7 @@ export default function JobsTable({
             </button>
           ))}
           <button
-            className="px-3 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200"
+            className="px-3 py-1 text-sm bg-gray-700 rounded hover:bg-gray-900"
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
