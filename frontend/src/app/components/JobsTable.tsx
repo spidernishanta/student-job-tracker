@@ -15,17 +15,13 @@ export default function JobsTable({
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("All");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const getStatusCounts = () => {
-    const counts: { [status: string]: number } = {};
-    jobs.forEach((job) => {
-      counts[job.status] = (counts[job.status] || 0) + 1;
-    });
-    return counts;
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
 
   const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
   const router = useRouter();
@@ -36,7 +32,14 @@ export default function JobsTable({
     window.location.reload();
   };
 
-  // Fetch jobs
+  const getStatusCounts = () => {
+    const counts: { [status: string]: number } = {};
+    jobs.forEach((job) => {
+      counts[job.status] = (counts[job.status] || 0) + 1;
+    });
+    return counts;
+  };
+
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -74,12 +77,20 @@ export default function JobsTable({
     fetchJobs();
   }, [onRefresh]);
 
-  // Apply filters and sorting
   useEffect(() => {
     let filtered = [...jobs];
 
     if (statusFilter !== "All") {
       filtered = filtered.filter((job) => job.status === statusFilter);
+    }
+
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (job) =>
+          job.company.toLowerCase().includes(term) ||
+          job.role.toLowerCase().includes(term)
+      );
     }
 
     filtered = filtered.sort((a, b) => {
@@ -89,11 +100,13 @@ export default function JobsTable({
     });
 
     setFilteredJobs(filtered);
-  }, [jobs, statusFilter, sortOrder]);
+    setCurrentPage(1); // Reset to first page when filter/search changes
+  }, [jobs, statusFilter, sortOrder, searchTerm]);
 
   const resetFilters = () => {
     setStatusFilter("All");
     setSortOrder("newest");
+    setSearchTerm("");
   };
 
   const updateJob = async (jobData: Partial<Job>) => {
@@ -145,6 +158,17 @@ export default function JobsTable({
     }
   };
 
+  // Pagination Calculations
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const paginatedJobs = filteredJobs.slice(
+    (currentPage - 1) * jobsPerPage,
+    currentPage * jobsPerPage
+  );
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -161,11 +185,12 @@ export default function JobsTable({
     );
 
   if (error) return <div className="text-red-600">{error}</div>;
+
   const statusCounts = getStatusCounts();
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      {/* Status Frequency Counter */}
+      {/* Status Summary */}
       <div className="p-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">
           Status Summary
@@ -216,6 +241,17 @@ export default function JobsTable({
           </select>
         </div>
 
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-gray-700">Search:</label>
+          <input
+            type="text"
+            placeholder="Search by company or role"
+            className="px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
         <button
           onClick={resetFilters}
           className="px-3 py-1.5 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
@@ -224,7 +260,7 @@ export default function JobsTable({
         </button>
       </div>
 
-      {/* Scrollable Table */}
+      {/* Job Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -247,15 +283,15 @@ export default function JobsTable({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 text-gray-900">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
+            {paginatedJobs.length > 0 ? (
+              paginatedJobs.map((job) => (
                 <tr key={job._id}>
                   <td className="px-6 py-4 whitespace-nowrap">{job.company}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{job.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{job.status}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {new Date(job.dateOfApplication).toLocaleDateString(
-                      "en-US",
+                      "en-IN",
                       {
                         year: "numeric",
                         month: "short",
@@ -281,7 +317,7 @@ export default function JobsTable({
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center py-4 text-gray-500">
+                <td colSpan={10} className="text-center py-4 text-gray-500">
                   No jobs found matching the criteria
                 </td>
               </tr>
@@ -290,6 +326,40 @@ export default function JobsTable({
         </table>
       </div>
 
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="p-4 flex justify-center items-center gap-2 bg-gray-50">
+          <button
+            className="px-3 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200"
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={`px-3 py-1 text-sm rounded ${
+                currentPage === i + 1
+                  ? "bg-indigo-500 text-white"
+                  : "bg-gray-100 hover:bg-gray-200"
+              }`}
+              onClick={() => goToPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            className="px-3 py-1 text-sm bg-gray-100 rounded hover:bg-gray-200"
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* Edit Modal */}
       {editingJob && (
         <JobModal
           job={editingJob}
