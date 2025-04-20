@@ -48,7 +48,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
           ✕
         </button>
 
-        <h2 className="text-2xl font-bold text-center mb-4">
+        <h2 className="text-2xl font-bold text-center mb-4 text-gray-900">
           {mode === "login" ? "Login" : "Sign Up"}
         </h2>
 

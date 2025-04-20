@@ -147,7 +147,7 @@ export default function HomePage() {
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-4xl font-bold text-blue-800">
-                  Student Job Tracker
+                  Next Step Tracker
                 </h1>
                 {isFetchingUser ? (
                   <p className="text-gray-600 animate-pulse mt-1">
@@ -197,7 +197,7 @@ export default function HomePage() {
         ) : (
           <div className="text-center mt-32">
             <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Student Job Tracker
+              Next Step Tracker
             </h1>
             <p className="text-gray-600 mb-8">
               Manage your job hunt like a pro 🚀

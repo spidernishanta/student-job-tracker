@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Student Job Tracker",
+  title: "Next Step Tracker",
   description:
     "Fullstack Developer TA Intern – MERN Stack Assignment (Cuvette) : Build a \"Student Job Tracker\" Web App",
 };
