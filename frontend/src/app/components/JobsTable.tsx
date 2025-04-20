@@ -23,7 +23,7 @@ export default function JobsTable({
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 10;
 
-  const BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
 
   const handleLogout = () => {

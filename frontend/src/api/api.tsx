@@ -1,6 +1,6 @@
 import { Job, JobCreateDTO, JobUpdateDTO } from "../app/types/job";
 
-const API_BASE_URL = "https://student-job-tracker-backend-9dmx.onrender.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const handleResponse = async (response: Response) => {
   const text = await response.text();
