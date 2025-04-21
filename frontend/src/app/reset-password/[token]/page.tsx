@@ -1,9 +1,11 @@
-import ResetPassword from "./ResetPassword";
+"use client";
 
-export default function ResetPasswordPage({
-  params,
-}: {
-  params: { token: string };
-}) {
-  return <ResetPassword token={params.token} />;
+import ResetPassword from "./ResetPassword";
+import { useParams } from 'next/navigation';
+
+export default function ResetPasswordPage() {
+  const params = useParams();
+  const token = Array.isArray(params.token) ? params.token[0] : params.token ?? '';
+
+  return <ResetPassword token={token} />;
 }
