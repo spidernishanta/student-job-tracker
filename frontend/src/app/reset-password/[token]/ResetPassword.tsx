@@ -39,9 +39,11 @@ const ResetPassword = ({ token }: { token: string }) => {
       Swal.fire("Success", "Password has been reset!", "success").then(() => {
         router.push("/");
       });
-    } catch (err: any) {
-      Swal.fire("Error", err.message, "error");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong";
+      Swal.fire("Error", errorMessage, "error");
     }
+    
   };
 
   return (

@@ -72,9 +72,11 @@ const AuthModal: React.FC<AuthModalProps> = ({
         }
 
         Swal.fire("Check your inbox!", data.message, "success");
-      } catch (error: any) {
-        Swal.fire("Error", error.message, "error");
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        Swal.fire("Error", errorMessage, "error");
       }
+
     }
   };
 
