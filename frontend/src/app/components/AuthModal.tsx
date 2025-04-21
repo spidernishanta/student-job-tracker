@@ -5,11 +5,7 @@ interface AuthModalProps {
   mode: "login" | "signup";
   onClose: () => void;
   onLogin: (credentials: { email: string; password: string }) => void;
-  onSignup: (userData: {
-    name: string;
-    email: string;
-    password: string;
-  }) => void;
+  onSignup: (userData: { name: string; email: string; password: string }) => void;
   error: string | null;
 }
 
@@ -23,11 +19,18 @@ const AuthModal: React.FC<AuthModalProps> = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email || !password || (mode === "signup" && !name)) {
       Swal.fire("All fields are required", "", "warning");
+      return;
+    }
+
+    if (mode === "signup" && password.length < 6) {
+      Swal.fire("Password should be at least 6 characters", "", "warning");
       return;
     }
 
@@ -37,6 +40,46 @@ const AuthModal: React.FC<AuthModalProps> = ({
       onSignup({ name, email, password });
     }
   };
+
+  const handleForgotPassword = async () => {
+    const { value: enteredEmail } = await Swal.fire({
+      title: "Forgot Password?",
+      input: "email",
+      inputLabel: "Enter your email address",
+      inputPlaceholder: "example@email.com",
+      confirmButtonText: "Send Reset Link",
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) return "Email is required";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return "Please enter a valid email";
+        return undefined;
+      },
+    });
+
+    if (enteredEmail) {
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: enteredEmail }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Something went wrong.");
+        }
+
+        Swal.fire("Check your inbox!", data.message, "success");
+      } catch (error: any) {
+        Swal.fire("Error", error.message, "error");
+      }
+    }
+  };
+
+  const inputClasses =
+    "w-full border p-2 mb-3 rounded-md text-gray-900 placeholder-gray-500";
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
@@ -57,7 +100,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             <input
               type="text"
               placeholder="Name"
-              className="w-full border p-2 mb-3 rounded-md text-gray-900 placeholder-gray-500"
+              className={inputClasses}
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoComplete="name"
@@ -67,21 +110,32 @@ const AuthModal: React.FC<AuthModalProps> = ({
           <input
             type="email"
             placeholder="Email"
-            className="w-full border p-2 mb-3 rounded-md text-gray-900 placeholder-gray-500"
+            className={inputClasses}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
           />
+
           <input
             type="password"
             placeholder="Password"
-            className="w-full border p-2 mb-4 rounded-md text-gray-900 placeholder-gray-500"
+            className="w-full border p-2 mb-2 rounded-md text-gray-900 placeholder-gray-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            autoComplete={
-              mode === "login" ? "current-password" : "new-password"
-            }
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
           />
+
+          {mode === "login" && (
+            <div className="text-right mb-4">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-blue-600 text-sm hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          )}
 
           {error && (
             <p className="text-red-500 text-sm mb-2 text-center">{error}</p>
