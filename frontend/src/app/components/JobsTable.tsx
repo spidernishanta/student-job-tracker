@@ -224,6 +224,7 @@ export default function JobsTable({
             <option value="Ghosted">Ghosted</option>
             <option value="Withdrawn">Withdrawn</option>
             <option value="On Hold">On Hold</option>
+            <option value="Archived">Archived</option>
           </select>
         </div>
 
