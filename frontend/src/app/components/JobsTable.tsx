@@ -81,26 +81,25 @@ export default function JobsTable({
     let filtered = [...jobs];
 
     if (statusFilter !== "All") {
-      filtered = filtered.filter((job) => job.status === statusFilter);
+      filtered = filtered.filter((job: Job) => job.status === statusFilter);
     }
 
     if (searchTerm.trim() !== "") {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (job) =>
-          job.company.toLowerCase().includes(term) ||
-          job.role.toLowerCase().includes(term)
+      filtered = filtered.filter((job: Job) =>
+        job.company.toLowerCase().includes(term) ||
+        job.role.toLowerCase().includes(term)
       );
     }
 
-    filtered = filtered.sort((a, b) => {
-      const dateA = new Date(a.dateOfApplication).getTime();
-      const dateB = new Date(b.dateOfApplication).getTime();
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-    });
+    filtered = filtered
+      .filter((job: Job) => job.status !== "Archived")
+      .sort((a: Job, b: Job) => sortOrder === "newest"
+        ? new Date(b.dateOfApplication).getTime() - new Date(a.dateOfApplication).getTime()
+        : new Date(a.dateOfApplication).getTime() - new Date(b.dateOfApplication).getTime());
 
     setFilteredJobs(filtered);
-    setCurrentPage(1); // Reset to first page when filter/search changes
+    setCurrentPage(1);
   }, [jobs, statusFilter, sortOrder, searchTerm]);
 
   const resetFilters = () => {
@@ -230,7 +229,6 @@ export default function JobsTable({
             <option value="Ghosted">Ghosted</option>
             <option value="Withdrawn">Withdrawn</option>
             <option value="On Hold">On Hold</option>
-            <option value="Archived">Archived</option>
           </select>
         </div>
 
