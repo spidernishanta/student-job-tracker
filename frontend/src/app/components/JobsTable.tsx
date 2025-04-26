@@ -195,7 +195,13 @@ export default function JobsTable({
         <h2 className="text-lg font-semibold text-gray-800 mb-2">
           Status Summary
         </h2>
+
         <div className="flex flex-wrap gap-3">
+          <div
+            className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-medium"
+          >
+            Total: {jobs.length}
+          </div>
           {Object.entries(statusCounts).map(([status, count]) => (
             <div
               key={status}
@@ -340,11 +346,10 @@ export default function JobsTable({
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
-              className={`px-3 py-1 text-sm rounded ${
-                currentPage === i + 1
-                  ? "bg-indigo-500 text-white"
-                  : "bg-gray-700 hover:bg-gray-900"
-              }`}
+              className={`px-3 py-1 text-sm rounded ${currentPage === i + 1
+                ? "bg-indigo-500 text-white"
+                : "bg-gray-700 hover:bg-gray-900"
+                }`}
               onClick={() => goToPage(i + 1)}
             >
               {i + 1}
