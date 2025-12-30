@@ -2,7 +2,7 @@ export interface Job {
   _id: string;
   company: string;
   role: string;
-  status: "Applied" | "Interview" | "Offer" | "Rejected" | "Ghosted" | "Withdrawn" | "On Hold" | "Archived";
+  status: "Applied" | "Test" | "Interview" | "Offer" | "Rejected" | "Ghosted" | "Withdrawn" | "On Hold" | "Archived";
   dateOfApplication: Date;
   link: string;
   createdAt?: Date;
@@ -10,7 +10,7 @@ export interface Job {
 }
 
 export type JobCreateDTO = Omit<Job, "_id" | "createdAt" | "updatedAt"> & {
-  status?: "Applied" | "Interview" | "Offer" | "Rejected" | "Ghosted" | "Withdrawn" | "On Hold" | "Archived";
+  status?: "Applied" | "Test" | "Interview" | "Offer" | "Rejected" | "Ghosted" | "Withdrawn" | "On Hold" | "Archived";
   dateOfApplication?: Date;
   link?: string;
 };

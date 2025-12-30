@@ -140,6 +140,7 @@ export default function JobModal({
               disabled={isSubmitting}
             >
               <option value="Applied">Applied</option>
+              <option value="Test">Test</option>
               <option value="Interview">Interview</option>
               <option value="Offer">Offer</option>
               <option value="Rejected">Rejected</option>
